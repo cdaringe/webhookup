@@ -9,7 +9,8 @@ import parse = require('parse-git-config')
 
 const debug = createDebug('webhookup:bin')
 
-const opts = meow(`
+const opts = meow(
+  `
 Usage
   $ webhookup [options]
 
@@ -38,54 +39,63 @@ Examples
   # ignore PWD, specify org & repo
   $ webhookup -o cdaringe -r webhookup
 `,
-{
-  flags: {
-    github: {
-      type: 'string',
-      alias: 'g'
-    },
-    owner: {
-      type: 'string',
-      alias: 'o'
-    },
-    repository: {
-      type: 'string',
-      alias: 'r'
-    },
-    token: {
-      type: 'string',
-      alias: 't'
-    },
-    endpoint: {
-      type: 'string',
-      alias: 'h'
-    },
-    secret: {
-      type: 'string',
-      alias: 's'
-    },
-    events: {
-      type: 'string',
-      alias: 'e'
-    },
-    purge: {
-      type: 'boolean',
-      alias: 'p'
-    },
+  {
+    flags: {
+      github: {
+        type: 'string',
+        alias: 'g'
+      },
+      owner: {
+        type: 'string',
+        alias: 'o'
+      },
+      repository: {
+        type: 'string',
+        alias: 'r'
+      },
+      token: {
+        type: 'string',
+        alias: 't'
+      },
+      endpoint: {
+        type: 'string',
+        alias: 'h'
+      },
+      secret: {
+        type: 'string',
+        alias: 's'
+      },
+      events: {
+        type: 'string',
+        alias: 'e'
+      },
+      purge: {
+        type: 'boolean',
+        alias: 'p'
+      }
+    }
   }
-})
+)
 debug('cli:', opts)
 
 async function go () {
   try {
     const config: webhook.Config = {
-      githubEndpoint: opts.flags.github || process.env.GITHUB_ENDPOINT || 'https://api.github.com',
+      githubEndpoint:
+        opts.flags.github ||
+        process.env.GITHUB_ENDPOINT ||
+        'https://api.github.com',
       githubOwner: opts.flags.owner || process.env.GITHUB_OWNER,
       githubRepository: opts.flags.repository || process.env.GITHUB_REPOSITORY,
-      githubToken: opts.flags.token || process.env.WEBHOOK_GITHUB_TOKEN || process.env.GITHUB_TOKEN,
+      githubToken:
+        opts.flags.token ||
+        process.env.WEBHOOK_GITHUB_TOKEN ||
+        process.env.GITHUB_TOKEN,
       hookEndpoint: opts.flags.endpoint || process.env.WEBHOOK_ENDPOINT,
       hookSecret: opts.flags.secret || process.env.WEBHOOK_SECRET,
-      hookEvents: arrayFromString(opts.flags.events || process.env.WEBHOOK_EVENTS || ''),
+      hookEvents: arrayFromString(
+        opts.flags.events || process.env.WEBHOOK_EVENTS || ''
+      ),
       purge: !!opts.flags.purge
     }
     if (!config.githubOwner && !config.githubRepository) {
@@ -94,12 +104,16 @@ async function go () {
       if (!gitConfigFilename) throw new HookupError('unable to read git config')
       const gitConfig = await parse.promise({ path: gitConfigFilename })
       if (!gitConfig) throw new HookupError('unable to read git config')
-      const [owner, repo] = gitConfig['remote "origin"'].url.match(/:(.+\/.+)\.git$/)[1].split('/')
+      const [owner, repo] = gitConfig['remote "origin"'].url
+        .match(/:(.+\/.+)\.git$/)[1]
+        .split('/')
       config.githubOwner = owner
       config.githubRepository = repo
       debug(`found owner/repo:`, [owner, repo])
     } else if (!config.githubOwner || !config.githubRepository) {
-      throw new HookupError(`if providing an owner or repo, you must provide both`)
+      throw new HookupError(
+        `if providing an owner or repo, you must provide both`
+      )
     }
     if (config.purge) await webhook.purge(config)
     else await webhook.up(config)

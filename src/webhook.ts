@@ -4,11 +4,11 @@ import createDebug from 'debug'
 const debug = createDebug('webhookup:webhookup')
 
 const JSON_HEADERS = {
-  'Accept': 'application/json',
+  Accept: 'application/json',
   'Content-Type': 'application/json'
 }
 
-export function withJsonHeaders (headers?: {[key: string]: string }) {
+export function withJsonHeaders (headers?: { [key: string]: string }) {
   headers = headers || {}
   return {
     ...JSON_HEADERS,
@@ -35,7 +35,9 @@ export type Config = {
   purge: boolean
 }
 export function getGitHubEndpoint (config: Config) {
-  return `${config.githubEndpoint}/repos/${config.githubOwner}/${config.githubRepository}/hooks`
+  return `${config.githubEndpoint}/repos/${config.githubOwner}/${
+    config.githubRepository
+  }/hooks`
 }
 
 export function maybeThrowGitHubApiError (res: any, json: any) {
@@ -54,7 +56,7 @@ export async function up (config: Config) {
     githubToken,
     hookEndpoint,
     hookSecret,
-    hookEvents,
+    hookEvents
   } = config
   const apiEndpoint = getGitHubEndpoint(config)
   const hookConfig: GithubCreateWebHookConfig = {
@@ -65,11 +67,11 @@ export async function up (config: Config) {
   }
   const res = await fetch(apiEndpoint, {
     method: 'post',
-    headers: withJsonHeaders({ Authorization: `token ${githubToken}`}),
+    headers: withJsonHeaders({ Authorization: `token ${githubToken}` }),
     body: JSON.stringify({
       config: hookConfig,
       events: hookEvents,
-      name: 'web',
+      name: 'web'
     })
   })
   const resJson = await res.json()
@@ -82,7 +84,7 @@ export async function purge (config: Partial<Config>) {
   const apiEndpoint = getGitHubEndpoint(config as Config)
   const res = await fetch(apiEndpoint, {
     method: 'get',
-    headers: withJsonHeaders({ Authorization: `token ${config.githubToken}`}),
+    headers: withJsonHeaders({ Authorization: `token ${config.githubToken}` })
   })
   const resJson = await res.json()
   maybeThrowGitHubApiError(res, resJson)
@@ -92,7 +94,7 @@ export async function purge (config: Partial<Config>) {
     debug(`deleting hook id: ${hook.id} [${deleteUri}]`)
     const delRes = await fetch(deleteUri, {
       method: 'delete',
-      headers: withJsonHeaders({ Authorization: `token ${config.githubToken}`}),
+      headers: withJsonHeaders({ Authorization: `token ${config.githubToken}` })
     })
     const delResJson = await delRes.json()
     maybeThrowGitHubApiError(delRes, delResJson)
@@ -100,23 +102,31 @@ export async function purge (config: Partial<Config>) {
   debug('purged')
 }
 
-export function validateWebhookConfig (config: Config, opts?: { githubOnly: boolean }) {
+export function validateWebhookConfig (
+  config: Config,
+  opts?: { githubOnly: boolean }
+) {
   debug('validating config')
   const { githubOnly = false } = opts || {}
   if (
-    githubOnly &&
-    !config.githubEndpoint ||
+    (githubOnly && !config.githubEndpoint) ||
     !config.githubOwner ||
     !config.githubRepository ||
     !config.githubToken
   ) {
-    const received = JSON.stringify({
-      githubEndpoint: config.githubEndpoint,
-      githubOwner: config.githubOwner,
-      githubRepository: config.githubRepository,
-      githubToken: config.githubToken
-    }, null, 2)
-    throw new Error(`incomplete github setup received:\n${received.replace(/\n/g, '\n\t')}`)
+    const received = JSON.stringify(
+      {
+        githubEndpoint: config.githubEndpoint,
+        githubOwner: config.githubOwner,
+        githubRepository: config.githubRepository,
+        githubToken: config.githubToken
+      },
+      null,
+      2
+    )
+    throw new Error(
+      `incomplete github setup received:\n${received.replace(/\n/g, '\n\t')}`
+    )
   } else if (
     !config.githubEndpoint ||
     !config.githubOwner ||
@@ -126,16 +136,22 @@ export function validateWebhookConfig (config: Config, opts?: { githubOnly: bool
     !config.hookSecret ||
     (!config.hookEvents || !config.hookEvents.length)
   ) {
-    const received = JSON.stringify({
-      githubEndpoint: config.githubEndpoint,
-      githubOwner: config.githubOwner,
-      githubRepository: config.githubRepository,
-      githubToken: config.githubToken,
-      hookEndpoint: config.hookEndpoint,
-      hookSecret: config.hookSecret,
-      hookEvents: config.hookEvents,
-    }, null, 2)
-    throw new Error(`incomplete hook setup received:\n${received.replace(/\n/g, '\n\t')}`)
+    const received = JSON.stringify(
+      {
+        githubEndpoint: config.githubEndpoint,
+        githubOwner: config.githubOwner,
+        githubRepository: config.githubRepository,
+        githubToken: config.githubToken,
+        hookEndpoint: config.hookEndpoint,
+        hookSecret: config.hookSecret,
+        hookEvents: config.hookEvents
+      },
+      null,
+      2
+    )
+    throw new Error(
+      `incomplete hook setup received:\n${received.replace(/\n/g, '\n\t')}`
+    )
   }
   debug('config OK')
 }
