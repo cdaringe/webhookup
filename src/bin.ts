@@ -105,7 +105,8 @@ async function go () {
       const gitConfig = await parse.promise({ path: gitConfigFilename })
       if (!gitConfig) throw new HookupError('unable to read git config')
       const [owner, repo] = gitConfig['remote "origin"'].url
-        .match(/:(.+\/.+)\.git$/)[1]
+        .replace(/\.git$/, '')
+        .match(/:(.+\/.+$)/)[1]
         .split('/')
       config.githubOwner = owner
       config.githubRepository = repo

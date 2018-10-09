@@ -2446,6 +2446,11 @@ path-type@^3.0.0:
   dependencies:
     pify "^3.0.0"
 
+perish@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/perish/-/perish-1.0.2.tgz#516eba8792bc76cdb381b69f3243d2213cc4cba3"
+  integrity sha512-VWFRnVQTyKr/5THvVtwsyIAvXI0fZhhZwKK73MLfbxnsrs00yUDc+KQZ7EmX+DfAGhsysiORIkEGmp3BaOEEgw==
+
 pify@^2.0.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
