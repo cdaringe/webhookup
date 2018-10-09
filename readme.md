@@ -2,13 +2,15 @@
 
 setup webhooks _quickly_ for your GitHub/GHE projects.
 
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release) [![Greenkeeper badge](https://badges.greenkeeper.io/cdaringe/pg-subscribe.svg)](https://greenkeeper.io/)
+
 ## usage
 
 `npx webhookup [options]`.  you can also `npm install -g webhookup` or `yarn global add webhookup`
 
 ## configuration
 
-`webhookup` can be **configured through the CLI or the environment**.  my preference is to set a few env vars and simply run `webhookup` in the current project to setup my most common webhook, then override it only as needed with the CLI.
+`webhookup` can be **configured through the CLI or the environment**.  my preference is to set a few env vars and simply run `webhookup` in the current project to setup my most commonly used webhook, then override it only as needed with the CLI.
 
 ### env
 
@@ -24,7 +26,7 @@ export WEBHOOK_EVENTS=status,pull_request # https://developer.github.com/webhook
 # export GITHUB_REPOSITORY # let the cli discover it from your project
 ```
 
-then `cd /my/project && webhookup`
+then `cd /my/project && webhookup`.  **please tread with caution** putting secrets in your env.
 
 ### cli
 

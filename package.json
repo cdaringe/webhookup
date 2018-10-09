@@ -13,6 +13,7 @@
     "@types/node": "^10.11.5",
     "@types/node-fetch": "^2.1.2",
     "@types/parse-git-config": "^2.0.1",
+    "execa": "^1.0.0",
     "husky": "^1.1.1",
     "lint-staged": "^7.3.0",
     "prettier-standard": "^8.0.1",
@@ -22,7 +23,8 @@
   "scripts": {
     "format": "prettier-standard 'src/**/*.js'",
     "precommit": "lint-staged",
-    "lint": "standard"
+    "lint": "standard",
+    "test": "node test/index.js"
   },
   "lint-staged": {
     "linters": {
