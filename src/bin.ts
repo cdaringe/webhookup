@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const getGitConfigPath = require('git-config-path')
 import { arrayFromString } from './util'
 import { HookupError } from './errors'
@@ -21,6 +22,7 @@ Options
 --endpoint, -h or env WEBHOOK_ENDPOINT. url to the origin (host:<port>) where your webhook listener lives
 --secret, -s or env WEBHOOK_SECRET. github webhook secret. your hook service uses this secret to verify that request is legitimate.
 --events, -e or env WEBHOOK_EVENTS. csv list of events. e.g. \`status,push\`
+--purge, -p delete all webhooks for repo.
 
 Examples
   # minimal, if you configure your env for everything
@@ -66,6 +68,10 @@ Examples
       type: 'string',
       alias: 'e'
     },
+    purge: {
+      type: 'boolean',
+      alias: 'p'
+    },
   }
 })
 debug('cli:', opts)
@@ -80,6 +86,7 @@ async function go () {
       hookEndpoint: opts.flags.endpoint || process.env.WEBHOOK_ENDPOINT,
       hookSecret: opts.flags.secret || process.env.WEBHOOK_SECRET,
       hookEvents: arrayFromString(opts.flags.events || process.env.WEBHOOK_EVENTS || ''),
+      purge: !!opts.flags.purge
     }
     if (!config.githubOwner && !config.githubRepository) {
       debug('reading owner/repo from git')
@@ -94,7 +101,8 @@ async function go () {
     } else if (!config.githubOwner || !config.githubRepository) {
       throw new HookupError(`if providing an owner or repo, you must provide both`)
     }
-    await webhook.up(config)
+    if (config.purge) await webhook.purge(config)
+    else await webhook.up(config)
   } catch (err) {
     if (err instanceof HookupError) {
       console.warn(err.message)
