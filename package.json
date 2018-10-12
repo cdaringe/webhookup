@@ -12,7 +12,7 @@
   ],
   "devDependencies": {
     "@types/debug": "^0.0.31",
-    "@types/meow": "^4.0.1",
+    "@types/meow": "^5.0.0",
     "@types/node": "^10.11.5",
     "@types/node-fetch": "^2.1.2",
     "@types/parse-git-config": "^2.0.1",
