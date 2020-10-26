@@ -11,18 +11,18 @@
     "build"
   ],
   "devDependencies": {
-    "@types/debug": "^4.1.0",
-    "@types/meow": "^5.0.0",
-    "@types/node": "^12.0.0",
-    "@types/node-fetch": "^2.1.2",
-    "@types/parse-git-config": "^3.0.0",
-    "execa": "^2.0.0",
-    "husky": "^3.0.0",
-    "lint-staged": "^9.0.0",
-    "perish": "^1.0.2",
+    "@types/debug": "4.1.0",
+    "@types/meow": "5.0.0",
+    "@types/node": "12.0.0",
+    "@types/node-fetch": "2.1.2",
+    "@types/parse-git-config": "3.0.0",
+    "execa": "2.0.0",
+    "husky": "3.1.0",
+    "lint-staged": "9.5.0",
+    "perish": "1.0.2",
     "prettier-standard": "*",
-    "standard": "^12.0.1",
-    "typescript": "^3.1.1"
+    "standard": "12.0.1",
+    "typescript": "3.1.1"
   },
   "scripts": {
     "build": "tsc",
