@@ -18,7 +18,7 @@
     "@types/parse-git-config": "^3.0.0",
     "execa": "^2.0.0",
     "husky": "^3.0.0",
-    "lint-staged": "^9.0.0",
+    "lint-staged": "11.2.3",
     "perish": "^1.0.2",
     "prettier-standard": "*",
     "standard": "^12.0.1",
